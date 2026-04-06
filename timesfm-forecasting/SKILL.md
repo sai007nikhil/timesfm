@@ -447,6 +447,33 @@ cd examples/covariates-forecasting && python demo_covariates.py
 | anomaly-detection | `output/anomaly_detection.json`, `output/anomaly_detection.png` | Sep 2023 flagged CRITICAL (z ≥ 3.0) |
 | covariates-forecasting | `output/sales_with_covariates.csv`, `output/covariates_data.png` | 108 rows (3 stores × 36 weeks); distinct price arrays per store |
 
+## 📈 Real-time Market Data (NIFTY 50 example)
+
+TimesFM can be effective for **real-time market forecasting as a baseline model** when
+used in a rolling setup (for example, predict the next 5–30 bars from the latest
+context window).
+
+### What works well
+
+- Fast, repeated short-horizon inference for univariate series (e.g., close prices).
+- Uncertainty bands from quantile forecasts for risk-aware decisions.
+- Easy extension with exogenous signals via `forecast_with_covariates()`.
+
+### Practical limitations
+
+- Market regimes shift quickly; zero-shot quality can degrade during sudden events.
+- Pure price-only input misses important signals (volume, volatility, macro/news).
+- TimesFM outputs forecasts, not execution logic; slippage and fees are outside scope.
+
+### Recommended setup for NIFTY 50
+
+1. Use walk-forward evaluation (rolling origin), never random train/test splits.
+2. Prefer short horizons (e.g., 5, 15, 30 bars) and refresh predictions each bar.
+3. Start with `normalize_inputs=True`, `use_continuous_quantile_head=True`,
+   `fix_quantile_crossing=True`.
+4. If forecasting returns/spreads (can be negative), set `infer_is_positive=False`.
+5. Track MAE/RMSE and quantile coverage by regime (calm vs volatile periods).
+
 ## Model Versions
 
 | Version | Params | Context | Status | HuggingFace checkpoint |

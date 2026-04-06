@@ -114,3 +114,20 @@ point_forecast, quantile_forecast = model.forecast(
 point_forecast.shape  # (2, 12)
 quantile_forecast.shape  # (2, 12, 10): mean, then 10th to 90th quantiles.
 ```
+
+### Real-time market data (e.g., NIFTY 50)
+
+TimesFM can work as a strong **zero-shot baseline** for market forecasting, especially
+for short-horizon predictions on regularly sampled bars (for example 1m/5m/1h/daily OHLC
+close values).
+
+- Best fit: rolling short-horizon forecasts with frequent updates.
+- Not a full trading system: it does not ingest order book microstructure, news, or
+  execution costs by default.
+- For market series that can cross zero (for example returns), set
+  `infer_is_positive=False`.
+- For better robustness, pair TimesFM forecasts with covariates
+  (`forecast_with_covariates`) such as volume, realized volatility, and event flags.
+
+For practical guidance using this repository's forecasting skill, see:
+`timesfm-forecasting/SKILL.md`.
