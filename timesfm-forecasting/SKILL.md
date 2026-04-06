@@ -450,7 +450,7 @@ cd examples/covariates-forecasting && python demo_covariates.py
 ## 📈 Real-time Market Data (NIFTY 50 example)
 
 TimesFM can be effective for **real-time market forecasting as a baseline model** when
-used in a rolling setup (for example, predict the next 5–30 bars from the latest
+used in a rolling setup (such as predicting the next 5–30 bars from the latest
 context window).
 
 ### What works well
@@ -462,7 +462,7 @@ context window).
 ### Practical limitations
 
 - Market regimes shift quickly; zero-shot quality can degrade during sudden events.
-- Pure price-only input misses important signals (volume, volatility, macro/news).
+- Pure price-only input misses important signals (volume, volatility, macroeconomic data/news).
 - TimesFM outputs forecasts, not execution logic; slippage and fees are outside scope.
 
 ### Recommended setup for NIFTY 50
