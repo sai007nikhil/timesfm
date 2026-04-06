@@ -462,7 +462,7 @@ context window).
 ### Practical limitations
 
 - Market regimes shift quickly; zero-shot quality can degrade during sudden events.
-- Pure price-only input misses important signals (volume, volatility, macroeconomic data/news).
+- Pure price-only input misses important signals (volume, volatility, macroeconomic data, news).
 - TimesFM outputs forecasts, not execution logic; slippage and fees are outside scope.
 
 ### Recommended setup for NIFTY 50

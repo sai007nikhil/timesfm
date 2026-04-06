@@ -130,4 +130,4 @@ OHLC close values).
   (`forecast_with_covariates`) such as volume, realized volatility, and event flags.
 
 For practical guidance using this repository's forecasting skill, see:
-`timesfm-forecasting/SKILL.md`.
+[`timesfm-forecasting/SKILL.md`](timesfm-forecasting/SKILL.md).
