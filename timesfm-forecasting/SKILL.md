@@ -43,6 +43,7 @@ Use this skill when:
 - You need to **batch-forecast** hundreds or thousands of series efficiently
 - You want a **foundation model** approach instead of hand-tuning ARIMA/ETS parameters
 - You need **covariate forecasting** with exogenous variables (price, promotions, holidays, day-of-week effects) → use `forecast_with_covariates()` (TimesFM 2.5 + `pip install timesfm[xreg]`)
+- You need **market data forecasting** (stock indices, Nifty 50, equities, FX) for trend extrapolation and risk-range estimation → see `examples/market-forecast/`
 
 
 Do **not** use this skill when:
@@ -52,6 +53,7 @@ Do **not** use this skill when:
 - You need multivariate vector autoregression or Granger causality → use `statsmodels`
 - Your data is tabular (not temporal) → use `scikit-learn`
 - You cannot install optional dependencies → XReg requires scikit-learn and JAX
+- You need **precise short-term price targets for trading** — TimesFM captures trend/momentum but financial markets are near-random-walk at short horizons; see `references/market_data_guide.md`
 
 
 > **Note on Anomaly Detection**: TimesFM does not have built-in anomaly detection, but you
@@ -423,6 +425,7 @@ python scripts/forecast_csv.py input.csv \
 | `references/system_requirements.md` | Hardware tiers, GPU/CPU selection, memory estimation |
 | `references/api_reference.md` | Full `ForecastConfig` docs, output shapes, model options |
 | `references/data_preparation.md` | Input formats, NaN handling, CSV loading, covariate setup |
+| `references/market_data_guide.md` | Financial time series: data prep, accuracy expectations, PI-as-risk-range, batch stock forecasting |
 
 ## 🧪 Examples
 
@@ -431,12 +434,20 @@ python scripts/forecast_csv.py input.csv \
 | **Global Temperature Forecast** | `examples/global-temperature/` | Basic `model.forecast()`, CSV → PNG → GIF pipeline |
 | **Anomaly Detection** | `examples/anomaly-detection/` | Two-phase detrend + Z-score + quantile PI, 2-panel viz |
 | **Covariates (XReg)** | `examples/covariates-forecasting/` | `forecast_with_covariates()`, 2×2 shared-axis viz |
+| **Market Forecast (Nifty 50)** | `examples/market-forecast/` | Real-time index forecasting via yfinance, PI-as-risk-range |
 
 ```bash
-# Run all three examples:
+# Run all examples:
 cd examples/global-temperature && python run_forecast.py && python visualize_forecast.py
 cd examples/anomaly-detection  && python detect_anomalies.py
 cd examples/covariates-forecasting && python demo_covariates.py
+
+# Market forecast (requires: pip install yfinance)
+cd examples/market-forecast && python forecast_nifty50.py
+# or with hold-out accuracy evaluation:
+cd examples/market-forecast && python forecast_nifty50.py --holdout 30
+# or without network (synthetic data):
+cd examples/market-forecast && python forecast_nifty50.py --synthetic
 ```
 
 ### Expected Outputs
@@ -446,6 +457,7 @@ cd examples/covariates-forecasting && python demo_covariates.py
 | global-temperature | `output/forecast_output.json`, `output/forecast_visualization.png` | `point_forecast` has 12 values; PNG shows context + forecast + PI bands |
 | anomaly-detection | `output/anomaly_detection.json`, `output/anomaly_detection.png` | Sep 2023 flagged CRITICAL (z ≥ 3.0) |
 | covariates-forecasting | `output/sales_with_covariates.csv`, `output/covariates_data.png` | 108 rows (3 stores × 36 weeks); distinct price arrays per store |
+| market-forecast | `output/nifty50_forecast.json`, `output/nifty50_forecast.png` | `point` array has 30 values; PNG shows 2-panel price history + uncertainty |
 
 ## Model Versions
 
